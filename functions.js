@@ -590,7 +590,8 @@ function checkCollision() {
                 handleJump();
             }
         });
-        document.addEventListener('click', handleJump());
+        
+        ctx.addEventListener('click', handleJump());
         
         
 
@@ -817,4 +818,5 @@ function showBuyResult(success, message) {
 document.getElementById('closeBuyResultBtn').onclick = function() {
     document.getElementById('buyResultPopup').style.display = 'none';
 };
+
 
