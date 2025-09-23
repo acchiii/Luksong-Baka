@@ -1,0 +1,425 @@
+:root {
+  --bg-sky: #87CEEB;         /* Sky blue */
+  --bg-dialog: #1E2A38;      /* Dark blue overlay */
+  --bg-button: #32CD32;  
+}
+
+body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #fff;
+             font-family: 'Press Start 2P', cursive;
+             background: url('../img/bgg.png') no-repeat center center;
+    background-size: cover; 
+        }
+        #gameContainer {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+          /*  border: 4px solid #fff; */
+          border: none;
+            overflow: hidden;
+           background: linear-gradient(to bottom, #87CEEB, #1E90FF);
+            
+              /*
+            Mountain Dawn
+            background: linear-gradient(to right, #E0C3FC, #8EC5FC);
+            
+            MAgical Forest
+            background: linear-gradient(to right, #355C7D, #6C5B7B, #C06C84);
+
+            Tropical Island
+            background: linear-gradient(to right, #FDCB6E, #E17055);
+
+            Cyber Punk City
+            background: linear-gradient(to right, #FF00CC, #333399);
+
+            */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        canvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;  
+        }
+
+        #coin {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1;
+        }
+        #scoreDisplay, #myscore {
+            position: absolute;
+            top: 22px;
+            left: 40px;
+            font-size: 15px;
+            font-weight: bold;
+            padding: 8px 3px;
+            color: white;
+            border-radius: 5px;
+            background: darkblue;
+            padding-left: 20px;
+            padding-right: 20px;
+            border-radius: 0 15px 15px 0;
+            border: 2px solid white;
+        }
+        #score {
+            position: absolute;
+            top: 73px;
+            left: 20px;
+            z-index: 1;
+        }
+
+        #myscore {
+            top: 73px;
+        }
+        #shield {
+            position: absolute;
+            top: 130px;
+            left: 20px;
+            z-index: 1;
+        }
+        #shieldCount {
+            position: absolute;
+            top: 130px;
+            left: 40px;
+            font-size: 15px;
+            font-weight: bold;
+            padding: 8px 3px;
+            color: white;
+            border-radius: 5px;
+            background: darkblue;
+            padding-left: 20px;
+            padding-right: 20px;
+            border-radius: 0 15px 15px 0;
+            border: 2px solid white;
+        }
+
+        #instructions {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 18px;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 5px;
+        }
+
+        #gameOverOverlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(30,40,60,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+#gameOverBox {
+  background: rgba(0, 0, 0, 0.653);
+  border-radius: 18px;
+  padding: 10px 32px;
+  box-shadow: 0 8px 32px rgba(14, 13, 54, 0.25);
+  text-align: center;
+  font-family: 'VT323', cursive;
+}
+
+#gameOverBox h2 {
+  margin-bottom: 18px;
+  color: #06ca6b;
+  font-size: 2.4em;
+}
+
+#gameOverBox p {
+  font-size: 1.6em;
+  margin-bottom: 24px;
+  color: white;
+}
+
+#restartBtn, #menuBtn {
+  font-family: inherit;
+  font-size: 1.2em;
+  padding: 12px 32px;
+  border-radius: 8px;
+  border: none;
+  background: var(--bg-button);
+  color: #fff;
+  cursor: pointer;
+  transition: ease-in-out 0.2s;
+}
+#restartBtn:hover, #menuBtn:hover {
+  background: #445b8a;
+}
+#menu {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 30;
+}
+
+#menuBox {
+  padding: 48px 40px 32px 40px;
+  box-shadow: 0 8px 32px rgba(30,40,60,0.18);
+  text-align: center;
+  display: block;
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+   background: url('../img/bg.png') no-repeat center center;
+    background-size: cover; 
+  }
+
+  #label {
+    margin-top: 15vh;
+    animation: move 4s infinite;
+    margin-bottom: 15vh;
+  }
+#menuBox button {
+  margin-top: 15vh;
+  font-family: 'VT323', cursive;
+  font-size: 1.8em;
+  padding: 2% 2%;
+  border-radius: 10px;
+  border: none;
+  background: rgb(54, 190, 54);
+  color: #fff;
+  cursor: pointer;
+  margin-bottom: 14px;
+  margin-top: 8px;
+  box-shadow: 0 2px 8px rgba(44,62,80,0.12);
+  transition: ease-in-out 0.2s, transform 0.2s;
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 2px solid #000;
+}
+#menuBox button#shopBtn {
+  background: orange;
+  font-weight: bold;
+}
+#menuBox button:hover {
+   transform: translateY(-2px) scale(1.04);
+}
+
+.menu-coins {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  gap: 8px;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 1.1em;
+  color: #f7971e;
+}
+
+#menuBox .controls {
+  margin-top: 18px;
+  background: #f3f6fa;
+  border-radius: 10px;
+  padding: 18px 0 10px 0;
+  box-shadow: 0 1px 4px rgba(67, 223, 77, 0.804);
+}
+#menuBox .controls h3 {
+  font-size: 1.1em;
+  color: #355C7D;
+  margin-bottom: 10px;
+  font-family: 'Press Start 2P', cursive;
+}
+#menuBox ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+#menuBox li {
+  font-size: 1em;
+  color: #445b8a;
+  margin-bottom: 6px;
+  font-family: 'Press Start 2P', cursive;
+  letter-spacing: 1px;
+}
+
+
+
+#settingsBtn {
+  position: absolute;
+  top: 18px;
+  right: 60px;
+  background: rgba(238, 240, 242, 0.92);
+  border: none;
+  border-radius: 50%;
+  padding: 8px;
+  box-shadow: 0 2px 8px rgba(44,62,80,0.10);
+  cursor: pointer;
+  z-index: 5;
+  transition: ease-in-out 0.2s, transform 0.2s;
+}
+#settingsBtn:hover {
+  background: #e3e8f0;
+  transform: scale(1.08);
+}
+#settingsBtn svg {
+  display: block;
+}
+
+#settingsOverlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(29, 63, 93, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+}
+#settingsBox {
+  background: var(--bg-dialog);
+  border-radius: 18px;
+  padding: 10px 32px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  text-align: center;
+  font-family: 'Press Start 2P', cursive;
+}
+
+#settingsBox button {
+  display: block;
+  width: 100%;
+  font-family: inherit;
+  font-size: 1em;
+  padding: 12px 18px;
+  border-radius: 8px;
+  border: none;
+  background: var(--bg-button);
+  color: #fff;
+  cursor: pointer;
+  margin-bottom: 14px;
+  transition: ease-in-out 0.2s, transform 0.2s;
+}
+#settingsBox button:hover {
+  background: #445b8a;
+  transform: translateY(-2px) scale(1.04);
+}
+
+
+#shopOverlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(30,40,60,0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 40;
+}
+#shopBox {
+  background: #fff;
+  border-radius: 18px;
+  padding: 40px 32px 32px 32px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  text-align: center;
+  min-width: 340px;
+  max-width: 95vw;
+  font-family: 'VT323', cursive;
+}
+#shopBox h2 {
+  margin-bottom: 18px;
+  color: #0db704;
+  font-size: 3em;
+  font-family: 'VT323', cursive;
+}
+.shop-coins {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: 'VT323', cursive;
+  font-size: 1.1em;
+  color: #f7971e;
+  margin-bottom: 18px;
+}
+.character-list {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+.character-item {
+  background: #f3f6fa;
+  border-radius: 12px;
+  padding: 18px 14px 14px 14px;
+  box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 120px;
+}
+.shop-character {
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(44,62,80,0.06);
+}
+.char-name {
+  font-family: 'VT323', cursive;
+  font-size: 1em;
+  color: #2a3a5a;
+  margin-bottom: 8px;
+}
+.character-item button {
+  font-family: 'VT323', cursive;
+  font-size: 0.9em;
+  padding: 8px 0;
+  border-radius: 8px;
+  border: none;
+  background: #2a3a5a;
+  color: #fff;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 4px;
+  transition: eas 0.2s, transform 0.2s;
+}
+.character-item button:hover {
+  background: #445b8a;
+  transform: translateY(-2px) scale(1.04);
+}
+#closeShopBtn {
+  font-family: 'VT323', cursive;
+  font-size: 1em;
+  padding: 12px 32px;
+  border-radius: 8px;
+  border: none;
+  background: #2a3a5a;
+  color: #fff;
+  cursor: pointer;
+  margin-top: 18px;
+  transition: ease-in-out 0.2s, transform 0.2s;
+}
+#closeShopBtn:hover {
+  background: #445b8a;
+  transform: translateY(-2px) scale(1.04);
+}
+
+@keyframes move {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
