@@ -587,6 +587,15 @@ function checkCollision() {
 
         document.addEventListener('keydown', (e) => {
             if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW' || e.code === 'Enter') {
+                handleJump();
+            }
+        });
+        document.addEventListener('click', handleJump());
+        
+        
+
+        function handleJump() {
+            
                 if(menuSound.paused == true && !gameRunning && document.getElementById('menu').style.display !== 'none') {
                     menuSound.currentTime = 0;  
                     menuSound.play();
@@ -617,9 +626,9 @@ function checkCollision() {
                     jumpSound.play();
                     player.speedY = player.jumpForce;
                     player.onGround = false;
-                }
+                
             }
-        });
+        }
 
    function init() {
     loadCoins();
