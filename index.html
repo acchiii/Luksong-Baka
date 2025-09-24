@@ -18,20 +18,10 @@
     <img src="img/label.png" alt="title" width="50%" id="label">
 <br>
 <br>
-<button id="startBtn" onclick="restart()">
-  <svg width="20" height="20" viewBox="0 0 24 24" style="vertical-align:middle; margin-right:8px;">
-    <polygon points="5,3 19,12 5,21" fill="white"/>
-  </svg>
-  Start Game
-</button>
-<button id="shopBtn">
-  <svg width="20" height="20" viewBox="0 0 24 24" style="vertical-align:middle; margin-right:8px;">
-    <circle cx="12" cy="12" r="9" stroke="white" stroke-width="2" fill="none"/>
-    <rect x="9" y="7" width="6" height="10" rx="2" fill="#ffd200" stroke="#2a3a5a" stroke-width="1"/>
-    <circle cx="12" cy="16" r="1" fill="white"/>
-  </svg>
-  Shop
-</button>
+<img id="startBtn" onclick="restart()" src="img/start.png" width="400">
+<img id="shopBtn" src="img/shop.png" width="400">
+<br><br><br><br>  
+<img id="project-label" src="img/project label.png" style="opacity: 0.5;" height="40">
     
     <div class="menu-coins" style="display: none; opacity: 0;">
       <img src="img/coin.gif" alt="Coin" width="32" height="32">
@@ -111,8 +101,8 @@
     <hr>
     <p class="shop-coins">
       <br>
-      <img src="img/coin.gif" alt="Coin" width="28" height="28">
-      <span id="shopCoinCount">0</span>
+      <img src="img/coin.gif" alt="Coin" width="48" height="48">
+      <span id="shopCoinCount" style="font-size: 2em; font-style: bold;">0</span>
     </p>
     <div class="character-list">
       <div class="character-item" data-char="char1" onclick="equip('default')">
