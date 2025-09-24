@@ -456,7 +456,7 @@ function checkCollision() {
 
           //increase platform speed over time
             if(jumpedCows % 100 == 0) {
-                platformSettings.speed += 0.005  ;
+                platformSettings.speed += 0.003  ;
                 if(cowSpawnChance < 0.7) {
                     cowSpawnChance += 0.05;
                 }
@@ -585,20 +585,7 @@ function checkCollision() {
             coins = coins.filter(coin => coin.x + coin.width >= 0);
 
   
-           //remove if lapas na sa screen
-              cows.forEach(cow => {
-                cow.x -= platformSettings.speed;
-
-                if(cow.x + cow.width < 0) {
-                    cows.splice(cows.indexOf(cow), 1);
-                    jumpedCows++;
-                }
-
-                
-        });
-            cows = cows.filter(cow => cow.x + cow.width >= 0);
-
-
+           
 
             //draw trees 
             trees.forEach(tree => {
@@ -609,8 +596,44 @@ function checkCollision() {
                 ctx.drawImage(tree.image, tree.x, tree.y, tree.width, tree.height);
             });
 
+    cows.forEach(cow => {
+     cow.x -= platformSettings.speed;
+    // Check if the cow is supported by a platform
+    let isSupported = false;
+    platforms.forEach(platform => {
+        if (
+            cow.x + cow.width > platform.x && // Cow overlaps platform horizontally
+            cow.x < platform.x + platform.width && // Cow overlaps platform horizontally
+            cow.y + cow.height === platform.y // Cow is exactly on top of the platform
+        ) {
+            isSupported = true;
+        }
+    });
+
+    // If the cow is not supported, apply gravity
+    if (!isSupported) {
+        cow.y += player.gravity; // Use the same gravity as the player
+    }
+
+    // Remove the cow if it falls off the screen
+    if (cow.y > canvas.height) {
+        cows.splice(cows.indexOf(cow), 1);
+    }
+
+    if(cow.x + cow.width < 0) {
+                    cows.splice(cows.indexOf(cow), 1);
+                    jumpedCows++;
+                }
+});
+         cows = cows.filter(cow => cow.x + cow.width >= 0);
+
+
+
           
 
+
+
+        
             checkCollision();
         }
 
