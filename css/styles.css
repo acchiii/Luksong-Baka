@@ -186,8 +186,9 @@ body {
 
   #label {
     margin-top: 15vh;
-    animation: move 4s infinite;
+    animation: move 3s infinite;
     margin-bottom: 15vh;
+    min-width: 250px;
   }
 #menuBox button {
   margin-top: 15vh;
@@ -255,14 +256,18 @@ body {
   letter-spacing: 1px;
 }
 
-#startBtn {
-  animation: startAnim infinite 2000ms ease-in-out;
-}
+
 #startBtn, #shopBtn {
   transition: transform 200ms ease-in-out;
+  max-width: 400px;
+  min-width: 200px;
 }
 #startBtn:hover, #shopBtn:hover {
   transform: scale(0.9);
+}
+
+#project-label {
+  min-height: 40px;
 }
 
 
