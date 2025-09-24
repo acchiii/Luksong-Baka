@@ -13,6 +13,10 @@
         const grounds = 20;
         let cowSpawnChance = 0.3;
         let isGameOver = false;
+        let groundComplexity = 0.1;
+
+
+
         loadCoins();
 
       var menuSound = new Audio('effects/menu.mp3');
@@ -188,12 +192,12 @@
         };
 
        
-        
+        let trees = [];
           const treeSettings = {       
                 width: 170,
                 height: 230,
                 x: canvas.width,
-                y: canvas.height - 230 - platformSettings.height + 5
+                y: canvas.height - 230 /*- platformSettings.height + 5*/
             };
 
         let cows = [];
@@ -266,7 +270,8 @@
                     y: canvas.height - platformSettings.height - cowsSettings.height, // Position on the ground
                     width: cowsSettings.width,
                     height: cowsSettings.height,
-                    image: loadedImages[9]
+                    image: loadedImages[9],
+                    rotate: Math.random() < 0.4 // 30% chance to rotate
                 };
                 cows.push(cow);
             }
@@ -278,38 +283,26 @@
        
     function drawPlayer() {
          
-            ctx.save();
-                ctx.globalAlpha = 0.35; 
-                ctx.fillStyle = "#222";
-                ctx.beginPath();
-                ctx.ellipse(
-                    player.x + player.width / 2,           
-                    player.y + player.height - 5,         
-                    player.width * 0.4,                    
-                    player.height * 0.18,                 
-                    0, 0, Math.PI * 2
-                );
-     ctx.fill();
-     ctx.restore();
-              ctx.drawImage(loadedImages[5], treeSettings.x + 5, treeSettings.y , treeSettings.width, treeSettings.height); // Draw ground
- 
             ctx.drawImage(loadedImages[1], player.x, player.y , player.width, player.height);
-          //draw protectoin
+          //draw protectiiion
           ctx.drawImage(loadedImages[10], protectionSetting.x, protectionSetting.y , protectionSetting.width, protectionSetting.height);
 
-       
-        }
+                }
 
  
         function drawPlatforms() {
             platforms.forEach((platform, idx) => {
+             
                 ctx.fillStyle = platform.color;
                 if(idx === 0) {
                     ctx.drawImage(loadedImages[7], platform.x, platform.y, platform.width, platform.height); // Draw ground
                 } else {
                 ctx.drawImage(loadedImages[0], platform.x, platform.y, platform.width, platform.height);
          }
-         });
+           
+        });
+
+         
         }
 
         function drawCoins() {
@@ -318,18 +311,27 @@
             });
         }
 
-        function drawCows(){
+        function drawCows() {
+
+            //draw cow and flip horizontally if rotate is true
             cows.forEach(cow => {
+                ctx.save();
+                if(cow.rotate) {
+                    ctx.translate(cow.x + cow.width / 2, cow.y + cow.height / 2);
+                    ctx.scale(-1, 1);
+                    ctx.translate(-cow.x - cow.width / 2, -cow.y - cow.height / 2);
+                }
                 ctx.drawImage(cow.image, cow.x, cow.y, cow.width, cow.height);
+                ctx.restore();
             });
 
-        }
+}
 
        
 function checkCollision() {
     player.onGround = false;
 
-    // Check collision with platforms
+    // check ang collision with grounds
     platforms.forEach(platform => {
         if (
             player.x < platform.x + platform.width &&
@@ -338,12 +340,56 @@ function checkCollision() {
             player.y + player.height <= platform.y + platform.height / 2 &&
             player.speedY >= 0
         ) {
-            // Land on platform
+            // Land on ground
             player.y = platform.y - player.height;
             player.speedY = 0;
             player.onGround = true;
         }
+
+        // Prevent going through ground from below
+        if (
+            player.x < platform.x + platform.width &&
+            player.x + player.width > platform.x &&
+            player.y < platform.y + platform.height &&
+            player.y + player.height > platform.y &&
+            player.speedY < 0
+        ) {
+            player.y = platform.y + platform.height;
+            player.speedY = 0;
+        }
+
+        
+        
     });
+
+
+
+
+    cows.forEach(cow => {
+    
+
+    // Check if the cow is supported by a platform
+    let isSupported = false;
+    platforms.forEach(platform => {
+        if (
+            cow.x + cow.width > platform.x && // Cow overlaps platform horizontally
+            cow.x < platform.x + platform.width && // Cow overlaps platform horizontally
+            cow.y + cow.height === platform.y // Cow is exactly on top of the platform
+        ) {
+            isSupported = true;
+        }
+    });
+
+    // If not supported, apply gravity to the cow
+    if (!isSupported) {
+        cow.y += 50; 
+    }
+
+    // Remove cow if it falls off the screen
+    if (cow.y > canvas.height) {
+        cows.splice(cows.indexOf(cow), 1);
+    }
+});
 
     // Check protection collection
     if (
@@ -355,13 +401,13 @@ function checkCollision() {
         protectionSetting.x = canvas.width * 3 + Math.random() * 1000; // Move protection off-screen
         protectionCount += 1;
 
-        // Play protection collection sound
+        
         purchaseSound.currentTime = 0;
         purchaseSound.play();
         document.getElementById('shieldCount').textContent = `${protectionCount}`;
     }
 
-    // Check collision with cows
+    // Check ang collision with cows
     cows.forEach(cow => {
         if (
             player.x < cow.x + cow.width &&
@@ -369,7 +415,7 @@ function checkCollision() {
             player.y < cow.y + cow.height &&
             player.y + player.height > cow.y
         ) {
-            // Collision detected
+           
             if (protectionCount > 0) {
                 protectionCount -= 1;
                 document.getElementById('shieldCount').textContent = `${protectionCount}`;
@@ -377,13 +423,13 @@ function checkCollision() {
                 // Move the cow off-screen to avoid multiple collisions
                 cow.x = -cow.width;
             } else if (!isGameOver) {
-                isGameOver = true; // Prevent multiple game-over calls
+                isGameOver = true; 
                 gameOver();
             }
         }
     });
 
-    // Collect coins and remove them after collection
+    // Collect coins and remove basta mo lapas sa screen
     coins = coins.filter(coin => {
         const collected =
             player.x < coin.x + coin.width &&
@@ -402,28 +448,42 @@ function checkCollision() {
 }
 
        
-        function update() {
-            //fill brown soil
-            ctx.fillStyle = "#89400cff";
-
-            ctx.fillRect(0, canvas.height - platformSettings.height + 20, canvas.width, platformSettings.height);
+    function update() {
             
-             //move protection
+        
+            //move protection
             protectionSetting.x -= platformSettings.speed; 
 
           //increase platform speed over time
             if(jumpedCows % 100 == 0) {
-                platformSettings.speed += 0.01  ;
+                platformSettings.speed += 0.005  ;
                 if(cowSpawnChance < 0.7) {
                     cowSpawnChance += 0.05;
                 }
             }
 
+            while(trees.length < 5) {
+                let scaleTree = Math.random() < 0.4 ? 20 : 40;
+                const tree = {
+                    x: canvas.width + Math.random() * 800,
+                    y: canvas.height - treeSettings.height /*- platformSettings.height + 5*/,
+                    width: treeSettings.width + scaleTree,
+                    height: treeSettings.height + scaleTree,
+                    image: loadedImages[5 + Math.floor(Math.random() * 2)] // Randomly select a tree image
+                };
+                trees.push(tree);
+            }
 
              
                 treeSettings.x -= platformSettings.speed * 0.5; // Move tree slower for parallax effect
            
-            platforms.forEach((platform, index) => {
+      platforms.forEach((platform, index) => {
+        
+                 //fill brown soil
+            ctx.fillStyle = "#89400cff";
+            ctx.fillRect(0, canvas.height - platformSettings.height + (platformSettings.height/2) - 10, canvas.width, platformSettings.height);
+       
+        
 
 
                 platform.x -= platformSettings.speed;
@@ -434,20 +494,32 @@ function checkCollision() {
                     treeSettings.x = canvas.width + Math.random() * 400;
                         }
                     
-                if (platform.x + platform.width < 0 && index !== 0) {
+         if (platform.x + platform.width < 0 && index !== 0)
+             {
                     platforms.splice(index, 1);
-//Add og new ground
+                   //Add og new ground
                     const lastPlatform = platforms[platforms.length - 1];
 
+                    let randomY;
+                    let randomX =lastPlatform.x + platformSettings.width;
+                    if(Math.random() < groundComplexity)
+                        { 
+                            randomY = canvas.height - (platformSettings.height * (Math.random() < 0.5 ? 3: 4));
+                            randomX +=  Math.random() * 50;
+                        } 
+                    else {
+                        randomY =canvas.height - platformSettings.height;
+                    }
                     const newPlatform = {
-                    x: lastPlatform.x + platformSettings.width,
-                    y: canvas.height - platformSettings.height ,
+                    x: randomX,
+                    y:  randomY,
                            width: platformSettings.width,
                         height: platformSettings.height,
+
                        passed: false
                     };
 
-                    if(Math.random() < 0.7) {
+                    if(Math.random() < 0.3) {
                     const coin = {
                     x: newPlatform.x + newPlatform.width / 2 - coinsSetting.width / 2,
                     y: newPlatform.y - coinsSetting.height - 10,
@@ -456,10 +528,15 @@ function checkCollision() {
                     image: loadedImages[8]
                 };
                 coins.push(coin);
+
+
+            
             }
 
                     platforms.push(newPlatform);
-                }
+
+                    
+        }
                 
                 // Check if player passed platform
                 if (!platform.passed && player.x > platform.x + platform.width) {
@@ -471,15 +548,21 @@ function checkCollision() {
             });
 
             //Add cow when last cow is far enough
-            if (cows.length === 0 || (cows[cows.length - 1].x < canvas.width - cowsSettings.gap)) {
+            if (cows.length === 0 || (cows[cows.length - 1].x < canvas.width - cowsSettings.gap - ( cowsSettings.gap * (Math.random() < 0.3) ? 1 : 2))) {
                 const cow = {
                     x: canvas.width + Math.random() * 300,
                     y: canvas.height - platformSettings.height - cowsSettings.height, // Position on the ground
                     width: cowsSettings.width,
                     height: cowsSettings.height,
-                    image: loadedImages[9]
+                    image: loadedImages[9],
+                    rotate: Math.random() < cowSpawnChance
                 };
-                cows.push(cow);
+
+                //Dont push cow if newPlatform is above certain height
+                if(platforms[platforms.length - 1 ].y <= canvas.height - platformSettings.height){
+                 cows.push(cow);
+                }
+
 
             }
 
@@ -502,7 +585,7 @@ function checkCollision() {
             coins = coins.filter(coin => coin.x + coin.width >= 0);
 
   
-           //remove when off screen
+           //remove if lapas na sa screen
               cows.forEach(cow => {
                 cow.x -= platformSettings.speed;
 
@@ -515,6 +598,16 @@ function checkCollision() {
         });
             cows = cows.filter(cow => cow.x + cow.width >= 0);
 
+
+
+            //draw trees 
+            trees.forEach(tree => {
+                tree.x -= platformSettings.speed * 0.5; // Move tree slower for parallax effect
+                if (tree.x + tree.width < 0) {
+                    trees.splice(trees.indexOf(tree), 1);
+                }
+                ctx.drawImage(tree.image, tree.x, tree.y, tree.width, tree.height);
+            });
 
           
 
@@ -536,6 +629,11 @@ function checkCollision() {
             cancelAnimationFrame(animationFrameId);
 
            cows = [];
+           coins = [];
+          
+           initPlatforms();
+           protectionSetting.x = canvas.width + 500;
+           protectionSetting.y = canvas.height - platformSettings.height - 30 - Math.random() * 200;
            
             var tmpC = gameCoin + jumpedCows;
             var rrr = `${mycoins} + ${tmpC}`;
@@ -568,6 +666,10 @@ function checkCollision() {
             
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+            //draw tree
+            ctx.drawImage(loadedImages[5], treeSettings.x, treeSettings.y , treeSettings.width, treeSettings.height);
+       
+  
             update();
             updateClouds();
            
